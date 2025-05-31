@@ -1,0 +1,72 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dummy Color Game</title>
+  <style>
+    body { font-family: Arial, sans-serif; text-align: center; background: #f0f0f0; margin: 0; padding: 0; }
+    h1 { background-color: #111; color: #fff; padding: 20px; }
+    .prediction-buttons button {
+      font-size: 18px;
+      margin: 10px;
+      padding: 15px 30px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      color: white;
+    }
+    .red { background: red; }
+    .green { background: green; }
+    .violet { background: purple; }
+    .result { font-size: 24px; margin-top: 30px; }
+    .admin-panel { margin-top: 40px; background: #fff; padding: 20px; border-top: 3px solid #111; }
+    input[type="text"] { padding: 10px; width: 200px; }
+    .results-list { margin-top: 20px; }
+  </style>
+</head>
+<body>
+  <h1>Dummy Color Prediction Game 🎨</h1>
+  <div class="prediction-buttons">
+    <button class="red" onclick="makePrediction('red')">Red</button>
+    <button class="green" onclick="makePrediction('green')">Green</button>
+    <button class="violet" onclick="makePrediction('violet')">Violet</button>
+  </div>
+
+  <div class="result" id="gameResult">Choose a color to begin!</div>
+
+  <div class="admin-panel">
+    <h2>Admin Panel 🔐</h2>
+    <p>Set next 10 results (comma-separated, e.g., red,green,violet,...)</p>
+    <input type="text" id="resultInput" placeholder="red,green,violet,...">
+    <button onclick="setResults()">Set Results</button>
+    <div class="results-list" id="resultsPreview"></div>
+  </div>
+
+  <script>
+    let upcomingResults = [];
+
+    function setResults() {
+      const input = document.getElementById('resultInput').value;
+      upcomingResults = input.split(',').map(r => r.trim().toLowerCase()).slice(0, 10);
+      document.getElementById('resultsPreview').innerHTML = '<strong>Upcoming Results:</strong> ' + upcomingResults.join(', ');
+    }
+
+    function makePrediction(prediction) {
+      if (upcomingResults.length === 0) {
+        document.getElementById('gameResult').innerText = 'No results set. Ask admin to set them.';
+        return;
+      }
+
+      const actual = upcomingResults.shift();
+      const msg = prediction === actual
+        ? `✅ You guessed ${prediction.toUpperCase()} and it was ${actual.toUpperCase()}! You win!`
+        : `❌ You guessed ${prediction.toUpperCase()} but it was ${actual.toUpperCase()}. Try again!`;
+
+      document.getElementById('gameResult').innerText = msg;
+      document.getElementById('resultsPreview').innerHTML = '<strong>Upcoming Results:</strong> ' + upcomingResults.join(', ');
+    }
+  </script>
+</body>
+</html>
